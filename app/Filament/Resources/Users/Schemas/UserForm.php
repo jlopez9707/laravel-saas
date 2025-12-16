@@ -22,7 +22,9 @@ class UserForm
                 DateTimePicker::make('email_verified_at'),
                 TextInput::make('password')
                     ->password()
-                    ->required(),
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn (string $context): bool => $context === 'create')
+                    ->label(fn (string $context) => $context === 'edit' ? 'Change password' : 'Password'),
                 Select::make('roles')
                     ->relationship('roles', 'name')
                     ->multiple()
