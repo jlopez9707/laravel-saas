@@ -17,15 +17,13 @@ class OrdersTable
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label('# Orden')
-                    ->sortable()
+                    ->label('# Order')
                     ->searchable(),
                 TextColumn::make('user.email')
-                    ->label('Usuario')
-                    ->sortable()
+                    ->label('User')
                     ->searchable(),
                 TextColumn::make('status')
-                    ->label('Estado')
+                    ->label('Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'created' => 'info',
@@ -34,32 +32,27 @@ class OrdersTable
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'created' => 'Creada',
-                        'completed' => 'Completada',
-                        'canceled' => 'Cancelada',
+                        'created' => 'Created',
+                        'completed' => 'Completed',
+                        'canceled' => 'Canceled',
                         default => $state,
-                    })
-                    ->sortable(),
-                TextColumn::make('products_count')
-                    ->label('Productos')
-                    ->counts('products')
+                    }),
+                TextColumn::make('created_at')
+                    ->label('Date')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable(),
                 TextColumn::make('total')
                     ->label('Total')
                     ->money('USD')
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->label('Fecha')
-                    ->dateTime('d/m/Y H:i')
-                    ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Estado')
+                    ->label('Status')
                     ->options([
-                        'created' => 'Creada',
-                        'completed' => 'Completada',
-                        'canceled' => 'Cancelada',
+                        'created' => 'Created',
+                        'completed' => 'Completed',
+                        'canceled' => 'Canceled',
                     ]),
             ])
             ->recordActions([
