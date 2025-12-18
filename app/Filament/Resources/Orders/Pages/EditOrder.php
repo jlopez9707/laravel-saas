@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Orders\Pages;
 
 use App\Filament\Resources\Orders\OrderResource;
 use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -33,7 +34,6 @@ class EditOrder extends EditRecord implements HasTable
     {
         parent::mount($record);
 
-        // Populate selected records and quantities
         $products = $this->record->products;
         
         foreach ($products as $product) {
@@ -59,12 +59,16 @@ class EditOrder extends EditRecord implements HasTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('price')
+                    ->label(__('Price'))
                     ->money('USD')
-                    ->sortable()
-                    ->width('1%'),
+                    ->sortable(),
+                TextColumn::make('stock')
+                    ->label(__('Stock available'))
+                    ->sortable(),
                 ViewColumn::make('quantity')
+                    ->label(__('Quantity'))
                     ->view('filament.tables.columns.quantity-input')
-                    ->width('1%')
+                    ->width('150px')
             ]);
     }
 
@@ -107,9 +111,8 @@ class EditOrder extends EditRecord implements HasTable
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        // Ignore products field from form
         unset($data['products']);
-
+        
         $selectedIds = array_keys(array_filter($this->selectedProductIds));
         $selectedProducts = Product::whereIn('id', $selectedIds)->get();
         
@@ -136,14 +139,16 @@ class EditOrder extends EditRecord implements HasTable
 
     protected function afterSave(): void
     {
-        if (isset($this->cachedProducts)) {
+        if (isset($this->cachedProducts) && !empty($this->cachedProducts)) {
             $syncData = [];
-            foreach ($this->cachedProducts as $product) {
-                $syncData[$product['product_id']] = [
-                    'quantity' => $product['quantity'],
-                    'price' => $product['price'],
+            
+            foreach ($this->cachedProducts as $productId => $data) {
+                $syncData[$productId] = [
+                    'quantity' => $data['quantity'],
+                    'price' => $data['price'],
                 ];
             }
+
             $this->record->products()->sync($syncData);
         }
     }

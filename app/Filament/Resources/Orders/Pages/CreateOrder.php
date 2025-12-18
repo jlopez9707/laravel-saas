@@ -15,11 +15,11 @@ use App\Models\Product;
 class CreateOrder extends CreateRecord implements HasTable
 {
     use InteractsWithTable;
-    
+
     protected array $cachedProducts = [];
 
     protected static string $resource = OrderResource::class;
-    
+
     public $quantities = [];
     public $selectedProductIds = [];
 
@@ -40,12 +40,20 @@ class CreateOrder extends CreateRecord implements HasTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('price')
+                    ->label(__('Price'))
                     ->money('USD')
                     ->sortable()
                     ->width('1%'),
+                TextColumn::make('stock')
+                    ->label(__('Stock available'))
+                    ->sortable()
+                    ->alignEnd()
+                    ->width('1%'),
                 ViewColumn::make('quantity')
+                    ->label(__('Quantity'))
+                    ->alignEnd()
                     ->view('filament.tables.columns.quantity-input')
-                    ->width('1%')
+                    ->width('150px')
             ]);
     }
 
@@ -71,11 +79,11 @@ class CreateOrder extends CreateRecord implements HasTable
 
         if (empty($selectedIds)) {
             Notification::make()
-                ->title('Validation Error')
-                ->body('You must select at least one product.')
+                ->title(__('Validation Error'))
+                ->body(__('You must select at least one product.'))
                 ->danger()
                 ->send();
-            
+
             $this->halt();
         }
     }
@@ -83,7 +91,7 @@ class CreateOrder extends CreateRecord implements HasTable
     public function updateTotal(): void
     {
         $selectedIds = array_keys(array_filter($this->selectedProductIds));
-        
+
         if (empty($selectedIds)) {
             $this->data['total'] = 0;
             return;
@@ -94,7 +102,7 @@ class CreateOrder extends CreateRecord implements HasTable
 
         foreach ($products as $product) {
             $qty = $this->quantities[$product->id] ?? 1;
-            $qty = max(1, (int)$qty);
+            $qty = max(1, (int) $qty);
             $total += $product->price * $qty;
         }
 
@@ -103,7 +111,6 @@ class CreateOrder extends CreateRecord implements HasTable
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        // We ignore the 'products' field from the form as we use the table selection
         unset($data['products']);
 
         $selectedIds = array_keys(array_filter($this->selectedProductIds));
@@ -114,9 +121,18 @@ class CreateOrder extends CreateRecord implements HasTable
 
         foreach ($selectedProducts as $product) {
             $quantity = $this->quantities[$product->id] ?? 1;
-            // Ensure quantity is at least 1
             $quantity = max(1, (int)$quantity);
             
+            if ($data['status'] === 'completed' && $product->stock < $quantity) {
+                Notification::make()
+                    ->title(__('Stock Error'))
+                    ->body(__('Insufficient stock to complete the order with the product: :name.', ['name' => $product->name]))
+                    ->danger()
+                    ->send();
+                
+                $this->halt();
+            }
+
             $productsToSave[] = [
                 'product_id' => $product->id,
                 'quantity' => $quantity,
@@ -134,11 +150,20 @@ class CreateOrder extends CreateRecord implements HasTable
 
     protected function afterCreate(): void
     {
-        foreach ($this->cachedProducts as $product) {
-            $this->record->products()->attach($product['product_id'], [
-                'quantity' => $product['quantity'],
-                'price' => $product['price'],
+        foreach ($this->cachedProducts as $productData) {
+            $this->record->products()->attach($productData['product_id'], [
+                'quantity' => $productData['quantity'],
+                'price' => $productData['price'],
             ]);
+        }
+
+        if ($this->record->status === 'completed') {
+            foreach ($this->cachedProducts as $productData) {
+                $product = Product::find($productData['product_id']);
+                if ($product) {
+                    $product->decrement('stock', $productData['quantity']);
+                }
+            }
         }
     }
 }

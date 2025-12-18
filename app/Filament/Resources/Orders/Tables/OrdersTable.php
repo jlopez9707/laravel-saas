@@ -2,10 +2,8 @@
 
 namespace App\Filament\Resources\Orders\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -56,13 +54,25 @@ class OrdersTable
                     ]),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                Action::make('changeStatus')
+                    ->label(__('Change Status'))
+                    ->icon('heroicon-m-arrow-path')
+                    ->color('warning')
+                    ->schema([
+                        Select::make('status')
+                            ->label(__('Status'))
+                            ->options([
+                                'created' => __('Created'),
+                                'completed' => __('Completed'),
+                                'canceled' => __('Canceled'),
+                            ])
+                            ->required(),
+                    ])
+                    ->action(function (\App\Models\Order $record, array $data): void {
+                        $record->update([
+                            'status' => $data['status'],
+                        ]);
+                    }),
             ])
             ->emptyStateHeading(__('No orders found'))
             ->emptyStateDescription(__('You have not created any orders yet.'))

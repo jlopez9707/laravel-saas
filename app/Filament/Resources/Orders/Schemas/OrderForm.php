@@ -18,7 +18,8 @@ class OrderForm
                     ->relationship('user', 'email')
                     ->searchable()
                     ->preload()
-                    ->required(),
+                    ->required()
+                    ->disabled(fn ($context) => $context === 'edit'),
                 Select::make('status')
                     ->label(__('Status'))
                     ->options([
