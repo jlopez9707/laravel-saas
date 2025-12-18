@@ -32,6 +32,8 @@ class ProductsTable
                 EditAction::make(),
                 DeleteAction::make(),
             ])
+            ->emptyStateHeading('No products found')
+            ->emptyStateDescription('You have not created any products yet.')
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

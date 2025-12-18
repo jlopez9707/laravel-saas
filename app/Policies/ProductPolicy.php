@@ -1,72 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
 use Illuminate\Foundation\Auth\User as AuthUser;
+use App\Models\Product;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy
+class ProductPolicy
 {
     use HandlesAuthorization;
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ViewAny:User');
+        return $authUser->can('ViewAny:Product');
     }
 
     public function view(AuthUser $authUser): bool
     {
-        return $authUser->can('View:User');
+        return $authUser->can('View:Product');
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('Create:User');
+        return $authUser->can('Create:Product');
     }
 
     public function update(AuthUser $authUser): bool
     {
-        return $authUser->can('Update:User');
+        return $authUser->can('Update:Product');
     }
 
     public function delete(AuthUser $authUser): bool
     {
-        return $authUser->can('Delete:User');
+        return $authUser->can('Delete:Product');
     }
 
     public function restore(AuthUser $authUser): bool
     {
-        return $authUser->can('Restore:User');
+        return $authUser->can('Restore:Product');
     }
 
     public function forceDelete(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDelete:User');
+        return $authUser->can('ForceDelete:Product');
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:User');
+        return $authUser->can('ForceDeleteAny:Product');
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('RestoreAny:User');
+        return $authUser->can('RestoreAny:Product');
     }
 
     public function deleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('DeleteAny:User');
+        return $authUser->can('DeleteAny:Product');
     }
 
     public function replicate(AuthUser $authUser): bool
     {
-        return $authUser->can('Replicate:User');
+        return $authUser->can('Replicate:Product');
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('Reorder:User');
+        return $authUser->can('Reorder:Product');
     }
 
 }
