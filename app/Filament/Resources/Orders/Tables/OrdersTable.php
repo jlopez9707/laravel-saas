@@ -17,13 +17,13 @@ class OrdersTable
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label('# Order')
+                    ->label(__('# Order'))
                     ->searchable(),
                 TextColumn::make('user.email')
-                    ->label('User')
+                    ->label(__('User'))
                     ->searchable(),
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'created' => 'info',
@@ -32,27 +32,27 @@ class OrdersTable
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'created' => 'Created',
-                        'completed' => 'Completed',
-                        'canceled' => 'Canceled',
+                        'created' => __('Created'),
+                        'completed' => __('Completed'),
+                        'canceled' => __('Canceled'),
                         default => $state,
                     }),
                 TextColumn::make('created_at')
-                    ->label('Date')
+                    ->label(__('Date'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
                 TextColumn::make('total')
-                    ->label('Total')
+                    ->label(__('Total'))
                     ->money('USD')
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->options([
-                        'created' => 'Created',
-                        'completed' => 'Completed',
-                        'canceled' => 'Canceled',
+                        'created' => __('Created'),
+                        'completed' => __('Completed'),
+                        'canceled' => __('Canceled'),
                     ]),
             ])
             ->recordActions([
@@ -64,8 +64,8 @@ class OrdersTable
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->emptyStateHeading('No orders found')
-            ->emptyStateDescription('You have not created any orders yet.')
+            ->emptyStateHeading(__('No orders found'))
+            ->emptyStateDescription(__('You have not created any orders yet.'))
             ->defaultSort('created_at', 'desc');
     }
 }

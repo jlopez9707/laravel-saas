@@ -14,25 +14,25 @@ class OrderForm
         return $schema
             ->components([
                 Select::make('user_id')
-                    ->label('User')
+                    ->label(__('User'))
                     ->relationship('user', 'email')
                     ->searchable()
                     ->preload()
                     ->required(),
                 Select::make('status')
-                    ->label('Status')
+                    ->label(__('Status'))
                     ->options([
-                        'created' => 'Created',
-                        'completed' => 'Completed',
-                        'canceled' => 'Canceled',
+                        'created' => __('Created'),
+                        'completed' => __('Completed'),
+                        'canceled' => __('Canceled'),
                     ])
                     ->default('created')
                     ->required(),
                 ProductTableField::make('products')
-                    ->label('Select Products')
+                    ->label(__('Select Products'))
                     ->columnSpanFull(),
                 TextInput::make('total')
-                    ->label('Total Order Value')
+                    ->label(__('Total Order Value'))
                     ->numeric()
                     ->prefix('$')
                     ->default(0)

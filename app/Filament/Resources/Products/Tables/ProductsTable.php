@@ -16,13 +16,17 @@ class ProductsTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable(),
                 TextColumn::make('description')
+                    ->label(__('Description'))
                     ->searchable(),
                 TextColumn::make('price')
+                    ->label(__('Price'))
                     ->money('usd', true)
                     ->sortable(),
                 TextColumn::make('stock')
+                    ->label(__('Stock'))
                     ->sortable(),
             ])
             ->filters([
@@ -32,8 +36,8 @@ class ProductsTable
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->emptyStateHeading('No products found')
-            ->emptyStateDescription('You have not created any products yet.')
+            ->emptyStateHeading(__('No products found'))
+            ->emptyStateDescription(__('You have not created any products yet.'))
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

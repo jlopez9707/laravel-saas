@@ -1,5 +1,7 @@
 <?php
 
+use Filament\Pages\Dashboard;
+
 return [
 
     /*
@@ -145,7 +147,7 @@ return [
     */
 
     'localization' => [
-        'enabled' => false,
+        'enabled' => true,
         'key' => 'filament-shield::filament-shield',
     ],
 
@@ -191,7 +193,7 @@ return [
         'subject' => 'class',
         'prefix' => 'view',
         'exclude' => [
-            \Filament\Pages\Dashboard::class,
+            Dashboard::class,
         ],
     ],
 

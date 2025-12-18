@@ -19,12 +19,13 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->searchable(),
                 TextColumn::make('roles.name')
-                    ->label('Roles')
+                    ->label(__('Roles'))
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'draft' => 'gray',
@@ -34,14 +35,17 @@ class UsersTable
                     })
                     ->searchable(),
                 TextColumn::make('email_verified_at')
+                    ->label(__('Email verified at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
+                    ->label(__('Created at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label(__('Updated at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
