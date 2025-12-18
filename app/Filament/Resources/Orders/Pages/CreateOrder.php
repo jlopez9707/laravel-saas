@@ -166,4 +166,9 @@ class CreateOrder extends CreateRecord implements HasTable
             }
         }
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
