@@ -22,6 +22,11 @@ class OrderResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'id';
 
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['id'];
+    }
+
     public static function getModelLabel(): string
     {
         return __('Order');
