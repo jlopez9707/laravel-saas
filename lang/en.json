@@ -257,5 +257,8 @@
     "Sale": "Sale",
     "Sales": "Sales",
     "ProductList": "Product List",
-    "Category": "Category"
+    "Category": "Category",
+    "Categories": "Categories",
+    "No products found": "No products found.",
+    "You have not created any products yet": "You have not created any products yet."
 }

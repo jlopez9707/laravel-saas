@@ -258,5 +258,8 @@
     "Sale": "Venta",
     "Sales": "Ventas",
     "ProductList": "Listado de productos",
-    "Category": "Categoría"
+    "Category": "Categoría",
+    "Categories": "Categorías",
+    "No products found": "No se encontraron productos.",
+    "You have not created any products yet": "Aún no has creado ningún producto."
 }
