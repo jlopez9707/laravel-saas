@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products;
 
+use App\Enums\NavigationGroup;
 use App\Filament\Resources\Products\Pages\CreateProduct;
 use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Filament\Resources\Products\Pages\ListProducts;
@@ -13,14 +14,20 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ArchiveBox;
-
+    protected static string | UnitEnum | null $navigationGroup = NavigationGroup::Product;
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::ArchiveBox;
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('ProductList');
+    }
 
     public static function getGloballySearchableAttributes(): array
     {
